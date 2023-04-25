@@ -77,14 +77,17 @@ const addParticipant = async (req, res) => {
       message: "Auction not found",
     });
 
+  let clientId = v4();
+
   if (auction && auction.password === password) {
     preset_name = "webinar_presenter";
+    clientId = "host-" + clientId;
   }
 
   const body = {
     name,
     preset_name,
-    custom_participant_id: v4(),
+    custom_participant_id: clientId,
   };
 
   if (imageUrl) {
@@ -107,6 +110,7 @@ const addParticipant = async (req, res) => {
       status: "Successful",
       message: "Participant added successfully",
       participantId: resp.data.data.id,
+      clientId,
       token: resp.data.data.token,
       auctionTitle: auction.title,
       auctionDescription: auction.description,
